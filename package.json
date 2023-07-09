@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/vue-query": "4.29.20",
+    "ant-design-vue": "4.0.0-rc.6",
     "axios": "1.4.0",
     "mhz-types": "0.0.1",
     "vue": "3.3.4",

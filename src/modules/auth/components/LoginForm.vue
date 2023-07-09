@@ -1,21 +1,22 @@
 <template>
-  <form @submit.prevent="submit" :class="$style.form">
-    <label :class="$style.label">
-      <span>E-mail</span>
-      <input v-model="formData.email" />
-    </label>
+  <Form @submit="submit" layout="vertical">
+    <FormItem label="E-mail" v-bind="validateInfos.email" required>
+      <Input v-model:value="formData.email" />
+    </FormItem>
 
-    <label :class="$style.label">
-      <span>Пароль</span>
-      <input v-model="formData.password" type="password" />
-    </label>
+    <FormItem label="Пароль" v-bind="validateInfos.password" required>
+      <InputPassword v-model:value="formData.password" />
+    </FormItem>
 
-    <button type="submit">Войти</button>
-  </form>
+    <Button htmlType="submit" type="primary">Войти</Button>
+  </Form>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+import { Button, Form, FormItem, Input, InputPassword } from 'ant-design-vue';
+import type { Rule } from 'ant-design-vue/es/form';
 
 import { postLogin } from '@/auth/services';
 import { useAuth } from '@/auth/composables';
@@ -27,26 +28,27 @@ const formData = ref({
   password: '',
 });
 
+const rules = ref<{ [key: string]: Rule[] }>({
+  email: [{ required: true, type: 'email' }],
+  password: [{ required: true }],
+});
+
+const useForm = Form.useForm;
+
+const { validate, validateInfos } = useForm(formData, rules);
+
 const { mutate } = postLogin(formData, {
   onSuccess: (token?: string) => {
     if (token) login(token);
   },
 });
 
-function submit() {
-  mutate();
+async function submit() {
+  try {
+    await validate();
+    mutate();
+  } catch (error) {
+    alert(`Исправьте ошибки валидации`);
+  }
 }
 </script>
-
-<style module lang="scss">
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.label {
-  display: flex;
-  flex-direction: column;
-}
-</style>
