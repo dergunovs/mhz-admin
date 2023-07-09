@@ -20,6 +20,7 @@ const isLoaded = ref(false);
 
 onMounted(async () => {
   await checkAuth();
+
   if (isLoggedIn.value) router.push('/main');
   isLoaded.value = true;
 });

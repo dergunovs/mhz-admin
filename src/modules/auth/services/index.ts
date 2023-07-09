@@ -42,6 +42,8 @@ export async function login(formData: ILoginFormData) {
 
 export async function checkAuth() {
   try {
+    if (!getToken()) return;
+
     api.defaults.headers.common['Authorization'] = `Bearer ${getToken()}`;
     await api.get('auth/check');
     isLoggedIn.value = true;
