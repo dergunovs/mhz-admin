@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isLoaded" :class="$style.main">
-    <TheHeader />
+  <div :class="$style.main">
+    <TheHeader v-if="isAuth" />
 
     <Suspense>
       <RouterView :class="$style.content" />
@@ -9,19 +9,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 import TheHeader from '@/layout/components/TheHeader.vue';
 
-import { useAuth } from '@/auth/composables';
-
-const isLoaded = ref(false);
+import { useAuth, isAuth } from '@/auth/composables';
 
 const { checkAuth } = useAuth();
 
 onMounted(async () => {
   await checkAuth();
-  isLoaded.value = true;
 });
 </script>
 
@@ -29,10 +26,12 @@ onMounted(async () => {
 .main {
   display: flex;
   flex-direction: column;
+  gap: 32px;
   min-height: 100vh;
 }
 
 .content {
   flex: 1;
+  padding: 0 64px;
 }
 </style>

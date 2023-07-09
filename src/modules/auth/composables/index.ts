@@ -5,11 +5,11 @@ import { getCookieToken, setCookieToken } from '@/auth/services';
 import { ILoginFormData } from '@/auth/interface';
 import { api, setAuthHeader } from '@/common/services/api';
 
+export const isAuth = ref(false);
+
 export function useAuth() {
   const router = useRouter();
   const route = useRoute();
-
-  const isAuth = ref(false);
 
   async function login(formData: ILoginFormData) {
     try {
@@ -18,6 +18,7 @@ export function useAuth() {
 
       setCookieToken(token);
       setAuthHeader(token);
+
       isAuth.value = true;
       router.push('/main');
     } catch (error) {
@@ -34,6 +35,7 @@ export function useAuth() {
 
       setAuthHeader(token);
       await api.get('auth/check');
+
       isAuth.value = true;
       if (route.path === '/') router.push('/main');
     } catch (error) {
@@ -43,7 +45,6 @@ export function useAuth() {
   }
 
   return {
-    isAuth,
     login,
     checkAuth,
   };
