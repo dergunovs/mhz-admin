@@ -13,15 +13,14 @@ import { ref, onMounted } from 'vue';
 
 import TheHeader from '@/layout/components/TheHeader.vue';
 
-import { checkAuth, isLoggedIn } from '@/auth/services';
-import router from '@/common/router';
+import { useAuth } from '@/auth/composables';
 
 const isLoaded = ref(false);
 
+const { checkAuth } = useAuth();
+
 onMounted(async () => {
   await checkAuth();
-
-  if (isLoggedIn.value) router.push('/main');
   isLoaded.value = true;
 });
 </script>

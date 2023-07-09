@@ -1,35 +1,41 @@
 <template>
-  <ElForm labelPosition="top">
-    <ElFormItem label="Имя">
-      <ElInput v-model="formData.email" />
-    </ElFormItem>
+  <form @submit.prevent="login(formData)" :class="$style.form">
+    <label :class="$style.label">
+      <span>E-mail</span>
+      <input v-model="formData.email" />
+    </label>
 
-    <ElFormItem label="Пароль">
-      <ElInput v-model="formData.password" type="password" />
-    </ElFormItem>
+    <label :class="$style.label">
+      <span>Пароль</span>
+      <input v-model="formData.password" type="password" />
+    </label>
 
-    <ElButton @click="handleLogin">Войти</ElButton>
-  </ElForm>
+    <button type="submit">Войти</button>
+  </form>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
 
-import { login } from '@/auth/services';
+import { useAuth } from '@/auth/composables';
 
-const router = useRouter();
+const { login } = useAuth();
 
 const formData = ref({
   email: '',
   password: '',
 });
-
-async function handleLogin() {
-  try {
-    await login(formData.value);
-    router.push('/main');
-  } catch (error) {}
-}
 </script>
+
+<style module lang="scss">
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+}
+</style>

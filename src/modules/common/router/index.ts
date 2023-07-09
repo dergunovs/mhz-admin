@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import { routes } from '@/common/router/routes';
-import { getToken } from '@/auth/services';
+import { getCookieToken } from '@/auth/services';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -12,8 +12,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.path !== '/' && !getToken()) next({ path: '/' });
-  next();
+  if (to.path !== '/' && !getCookieToken()) {
+    next({ path: '/' });
+  } else {
+    next();
+  }
 });
 
 export default router;

@@ -13,4 +13,13 @@ axios.interceptors.response.use(
     throw new Error();
   }
 );
+
 export const api = axios;
+
+export function setAuthHeader(token: string) {
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
+export function deleteAuthHeader() {
+  api.defaults.headers.common['Authorization'] = ``;
+}
