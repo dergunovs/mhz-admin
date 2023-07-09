@@ -1,10 +1,13 @@
 import { RouteRecordRaw } from 'vue-router';
 
+import { authRoutes } from '@/auth/routes';
+import { URL_MAIN, URL_ERROR } from '@/common/constants';
+
 export const routes: RouteRecordRaw[] = [
-  { path: '/', name: 'Login', component: () => import('@/auth/pages/LoginPage.vue') },
+  ...authRoutes,
 
-  { path: '/main', name: 'Main', component: () => import('@/common/pages/MainPage.vue') },
+  { path: URL_MAIN, name: 'Main', component: () => import('@/common/pages/MainPage.vue') },
 
-  { path: '/404', name: '404', component: () => import('@/common/pages/ErrorPage.vue') },
+  { path: URL_ERROR, name: '404', component: () => import('@/common/pages/ErrorPage.vue') },
   { path: '/:catchAll(.*)', name: 'error', redirect: '404' },
 ];

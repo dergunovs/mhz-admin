@@ -9,17 +9,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-
 import TheHeader from '@/layout/components/TheHeader.vue';
 
-import { useAuth, isAuth } from '@/auth/composables';
+import { getCheckAuth } from '@/auth/services';
+import { getCookieToken, isAuth, setAuth } from '@/auth/composables';
+import { setAuthHeader } from '@/common/services/api';
+import { URL_LOGIN } from '@/auth/constants';
 
-const { checkAuth } = useAuth();
+const isLoginPageAfterLogout = window.location.pathname === URL_LOGIN && window.location.search === '?logout=1';
 
-onMounted(async () => {
-  await checkAuth();
-});
+const token = getCookieToken();
+
+if (!isLoginPageAfterLogout && token) {
+  setAuthHeader(token);
+
+  getCheckAuth({
+    onSuccess: () => {
+      setAuth(true);
+    },
+  });
+}
 </script>
 
 <style module lang="scss">

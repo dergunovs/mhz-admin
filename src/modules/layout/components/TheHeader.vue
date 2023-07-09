@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { logout } from '@/auth/services';
+import { logout } from '@/auth/composables';
 </script>
 
 <style module lang="scss">

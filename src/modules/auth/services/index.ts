@@ -1,21 +1,35 @@
-import { deleteAuthHeader } from '@/common/services/api';
+import { Ref } from 'vue';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 
-export function setCookieToken(token: string) {
-  document.cookie = `token=${token};Secure;samesite=strict;`;
+import { ILoginFormData } from '@/auth/interface';
+import { API_GET_CHECK_AUTH, API_POST_LOGIN } from '@/auth/constants';
+
+import { api } from '@/common/services/api';
+
+export function postLogin(formData: Ref<ILoginFormData>, options: object) {
+  async function fn(): Promise<string | undefined> {
+    const { data } = await api.post(API_POST_LOGIN, formData.value);
+
+    return data.token;
+  }
+
+  return useMutation({
+    mutationKey: [API_POST_LOGIN, formData],
+    mutationFn: fn,
+    ...options,
+  });
 }
 
-export function getCookieToken(): string | undefined {
-  const { token } = Object.fromEntries(document.cookie.split('; ').map((v) => v.split('=')));
+export function getCheckAuth(options: object) {
+  async function fn() {
+    const { data } = await api.get(API_GET_CHECK_AUTH);
 
-  return token;
-}
+    return data;
+  }
 
-export function deleteCookieToken() {
-  document.cookie = `token=;expires=${new Date(0).toUTCString()}`;
-}
-
-export function logout() {
-  deleteCookieToken();
-  deleteAuthHeader();
-  window.location.href = '/';
+  return useQuery({
+    queryKey: [API_GET_CHECK_AUTH],
+    queryFn: fn,
+    ...options,
+  });
 }
